@@ -28,7 +28,7 @@ class SimulatedAnnealing{
     simulatedAnnealing_X(){
         bestSoFar = currentState = this.functionX(x1, x2);
 
-        console.log('Inisial CurrentState');
+        console.log('Initial CurrentState');
         console.log('CurrentState : ('+currentState+')');
         console.log('------------------------------------');
         while(tempAwal > tempAkhir){
@@ -36,30 +36,21 @@ class SimulatedAnnealing{
             var _x1 = chance.floating({ min: min, max: max });
             var _x2 = chance.floating({ min: min, max: max });
             newState = this.functionX(_x1, _x2);
-            var deltaE_x = currentState - newState;
+            console.log(newState);
             
-            if(currentState < currentState){
+            if(newState < currentState){
                 x1 = _x1;
                 x2 = _x2;
                 bestSoFar = newState;
                 currentState = newState;
             }else{
+                var deltaE_x = currentState - newState;
                 var prob = this.probabilities(deltaE_x, tempAwal);
                 
                 if(prob > chance.floating({ min : 0, max: 1 })){
                     currentState = newState;
                 }
             }    
-
-            //cek lagi karena sudah di ganti ke newState (hemat perulangan)
-            if(currentState < bestSoFar){
-                x1 = _x1;
-                x2 = _x2;
-                bestSoFar = newState;
-                currentState = newState;
-            }
-
-            // console.log('Checking Best so Far : ('+x1+' , '+x2+')');
 
             tempAwal *= rate;
         }
