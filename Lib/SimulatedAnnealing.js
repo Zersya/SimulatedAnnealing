@@ -1,12 +1,8 @@
 
 
-var tempAwal     = 1000;
+var tempAwal     = 100;
 var tempAkhir    = 0.0001;
-var rate         = 0.99;
-
-//Start value
-// var x1 = 3.0;  
-// var x2 = 4.0;
+var rate         = 0.9999;
 
 var chance = new Chance(Math.random); //lib random
 
@@ -22,46 +18,53 @@ var bestSoFar;
 
 class SimulatedAnnealing{
     constructor(){
-        this.simulatedAnnealing_X();
+        currentState = this.functionX(x1, x2);
+        bestSoFar = currentState;
+        // this.simulatedAnnealing();
     }
 
-    simulatedAnnealing_X(){
-        bestSoFar = currentState = this.functionX(x1, x2);
-
+    simulatedAnnealing(){
         console.log('Initial CurrentState');
-        console.log('CurrentState : ('+currentState+')');
+        console.log('X Best so Far : ('+x1+' , '+x2+')');
+        console.log('Best so Far : ('+bestSoFar+')');
         console.log('------------------------------------');
         while(tempAwal > tempAkhir){
         
             var _x1 = chance.floating({ min: min, max: max });
             var _x2 = chance.floating({ min: min, max: max });
             newState = this.functionX(_x1, _x2);
-            console.log(newState);
+            var deltaE = newState - currentState;
             
-            if(newState < currentState){
+            if(deltaE < 0){
                 x1 = _x1;
                 x2 = _x2;
                 bestSoFar = newState;
                 currentState = newState;
-            }else{
-                var deltaE_x = currentState - newState;
-                var prob = this.probabilities(deltaE_x, tempAwal);
-                
-                if(prob > chance.floating({ min : 0, max: 1 })){
+            }else if(deltaE >= 0){
+                var prob = this.probabilities(deltaE, tempAwal);
+                if(chance.floating({ min : 0, max: 1 }) < prob){
+                    bestSoFar = newState;
                     currentState = newState;
                 }
             }    
 
+            // console.log('Process BSF : (' + bestSoFar +')');    
+            
             tempAwal *= rate;
         }
-        // console.log('------------------------------------');
-        console.log('X Best so Far : ('+x1+' , '+x2+')');
         console.log('------------------------------------');
+        console.log('X Best so Far : ('+x1+' , '+x2+')');
         console.log('Final State : (' + bestSoFar +')');    
+
+        return bestSoFar;
+    }
+
+    getInitialState(){
+        return currentState;
     }
 
     probabilities(deltaE, tempAwal){
-        return Math.exp((-deltaE)/tempAwal);
+        return Math.exp(-deltaE/tempAwal);
     }
 
     functionX(x1, x2){

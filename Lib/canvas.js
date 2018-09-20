@@ -1,8 +1,17 @@
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
+var font = '40px Arial';
 
-ctx.beginPath();
-ctx.moveTo(20,20);
-ctx.bezierCurveTo(50,100,200,100,200,20);
-ctx.stroke();
+class Canvas{
+    constructor(){
+
+    }
+
+    WriteCanvasText(text, x, y){
+        ctx.font = font;
+        ctx.strokeText(text, x, y);
+    }
+
+}
+
 
