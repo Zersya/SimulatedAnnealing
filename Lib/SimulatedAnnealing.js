@@ -1,6 +1,6 @@
 
 
-var tempAwal     = 100;
+var tempAwal     = 10;
 var tempAkhir    = 0.0001;
 var rate         = 0.9999;
 
@@ -34,6 +34,7 @@ class SimulatedAnnealing{
             var _x2 = chance.floating({ min: min, max: max });
             newState = this.functionX(_x1, _x2);
             var deltaE = newState - currentState;
+            // var deltaE = currentState - newState;
             
             if(deltaE < 0){
                 x1 = _x1;
@@ -64,7 +65,7 @@ class SimulatedAnnealing{
     }
 
     probabilities(deltaE, tempAwal){
-        return Math.exp(-deltaE/tempAwal);
+        return Math.exp((-deltaE)/tempAwal);
     }
 
     functionX(x1, x2){
